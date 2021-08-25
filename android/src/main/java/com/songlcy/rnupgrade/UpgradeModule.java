@@ -23,7 +23,7 @@ import java.lang.String;
  * Update by Song on 2021/01/21.19:58
  */
 public class UpgradeModule extends ReactContextBaseJavaModule {
-
+    private final static String PLAY_STORE_PACKAGE_NAME = "com.android.vending";
     private ReactApplicationContext context;
     private String versionName = "1.0.0";
     private int versionCode = 1;
@@ -75,6 +75,16 @@ public class UpgradeModule extends ReactContextBaseJavaModule {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("https://play.google.com/store/apps/details?id=%s", packageName)));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.context.startActivity(intent);
+        }
+    }
+
+    @ReactMethod
+    public void checkPlayStore() {
+        try {
+            return this.context.getPackageManager().getApplicationInfo(PLAY_STORE_PACKAGE_NAME, 0).enabled;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            return false;
         }
     }
 }

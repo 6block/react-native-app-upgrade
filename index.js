@@ -124,6 +124,13 @@ export const openPlayStore = () => {
     }
 }
 
+export const checkPlayStoreInstalled = () => {
+    if (ANDROID_PLATFORM) {
+        return RNUpgrade.checkPlayStore();
+    }
+    return false;
+}
+
 /**
  * 检查本地是否有apk文件
  * @param apkFilePath 下载的apk文件路径
