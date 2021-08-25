@@ -1,5 +1,8 @@
 package com.songlcy.rnupgrade;
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -13,6 +16,7 @@ import com.songlcy.rnupgrade.utils.FileUtils;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.String;
 
 /**
  * Created by Song on 2017/7/10.
@@ -20,7 +24,7 @@ import java.util.Map;
  */
 public class UpgradeModule extends ReactContextBaseJavaModule {
 
-    private static ReactApplicationContext context;
+    private ReactApplicationContext context;
     private String versionName = "1.0.0";
     private int versionCode = 1;
 
@@ -57,6 +61,20 @@ public class UpgradeModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void installApk(String filePath) {
-        ApkInstallUtils.install(context, filePath);
+        ApkInstallUtils.install(this.context, filePath);
+    }
+
+    @ReactMethod
+    public void openPlayStore() {
+        String packageName = this.context.getPackageName();
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW,  Uri.parse(String.format("market://details?id=%s", packageName)));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("https://play.google.com/store/apps/details?id=%s", packageName));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.context.startActivity(intent);
+        }
     }
 }

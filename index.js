@@ -118,6 +118,12 @@ export const downloadApk = async ({
     }
 }
 
+export const openPlayStore = () => {
+    if (ANDROID_PLATFORM) {
+        RNUpgrade.openPlayStore();
+    }
+}
+
 /**
  * 检查本地是否有apk文件
  * @param apkFilePath 下载的apk文件路径
