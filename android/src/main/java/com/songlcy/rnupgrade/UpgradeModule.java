@@ -79,7 +79,7 @@ public class UpgradeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void checkPlayStore() {
+    public boolean checkPlayStore() {
         try {
             return this.context.getPackageManager().getApplicationInfo(PLAY_STORE_PACKAGE_NAME, 0).enabled;
         }
