@@ -1,8 +1,8 @@
 package com.songlcy.rnupgrade;
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.net.Uri
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -72,7 +72,7 @@ public class UpgradeModule extends ReactContextBaseJavaModule {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("https://play.google.com/store/apps/details?id=%s", packageName));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("https://play.google.com/store/apps/details?id=%s", packageName)));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.context.startActivity(intent);
         }
