@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.Promise;
 import com.songlcy.rnupgrade.Constants.Constants;
 import com.songlcy.rnupgrade.utils.ApkInstallUtils;
 import com.songlcy.rnupgrade.utils.FileUtils;
@@ -79,12 +80,11 @@ public class UpgradeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public boolean checkPlayStore() {
+    public void checkPlayStore(Promise promise) {
         try {
-            return this.context.getPackageManager().getApplicationInfo(PLAY_STORE_PACKAGE_NAME, 0).enabled;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            return false;
+            promise.resolve(this.context.getPackageManager().getApplicationInfo(PLAY_STORE_PACKAGE_NAME, 0).enabled);
+        } catch (PackageManager.NameNotFoundException e) {
+            promise.resolve(false);
         }
     }
 }

@@ -124,7 +124,7 @@ export const openPlayStore = () => {
     }
 }
 
-export const checkPlayStoreInstalled = () => {
+export const checkPlayStoreInstalled = async () => {
     if (ANDROID_PLATFORM) {
         return RNUpgrade.checkPlayStore();
     }
