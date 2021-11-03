@@ -116,6 +116,7 @@ export const downloadApk = async ({
         const apkFileExist = await checkApkFileExist(apkFilePath);
         apkFileExist && RNUpgrade.installApk(apkFilePath);
     }
+    callback?.onFinish();
 }
 
 export const openPlayStore = () => {
