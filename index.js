@@ -91,12 +91,13 @@ export const openAPPStore = (appid) => {
  * @param callback 下载结果回调
  */
 export const downloadApk = async ({
+    fileName,
     apkUrl,
     callback,
     interval = 250,
     downloadInstall = true
 }) => {
-	const apkFilePath = RNUpgrade.downloadApkFilePath;
+	const apkFilePath = RNUpgrade.downloadApkFilePath + fileName;
 	// const apkHasDownload = await checkApkFileExist(apkFilePath);
     // if (apkHasDownload) {
     //     RNUpgrade.installApk(downloadApkFilePath);
@@ -111,12 +112,11 @@ export const downloadApk = async ({
         .catch((errorMessage, statusCode) => {
           callback?.onFailure(errorMessage, statusCode);
         });
-    callback?.onComplete();
+    await callback?.onComplete();
     if (downloadInstall) {
-        const apkFileExist = await checkApkFileExist(apkFilePath);
-        apkFileExist && RNUpgrade.installApk(apkFilePath);
+        await installApk(fileName);
     }
-    callback?.onFinish();
+    await callback?.onFinish();
 }
 
 export const openPlayStore = () => {
@@ -136,7 +136,14 @@ export const checkPlayStoreInstalled = async () => {
  * 检查本地是否有apk文件
  * @param apkFilePath 下载的apk文件路径
  */
-const checkApkFileExist = async (apkFilePath) => {
-    return await RNFetchBlob.fs.exists(apkFilePath);
+export const checkApkFileExist = async (fileName) => {
+    const path = RNUpgrade.downloadApkFilePath + fileName;
+    return await RNFetchBlob.fs.exists(path);
+}
+
+export const installApk = async (fileName) => {
+	const apkFilePath = RNUpgrade.downloadApkFilePath + fileName;
+    const apkFileExist = await checkApkFileExist(fileName);
+    apkFileExist && RNUpgrade.installApk(apkFilePath);
 }
 
