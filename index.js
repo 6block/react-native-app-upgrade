@@ -110,14 +110,16 @@ export const downloadApk = async ({
         .progress({ interval }, (received, total) => {
             callback?.onProgress(getFilesize(received), getFilesize(total), parseInt((received / total * 100)));
         })
+        .onFinish(async () => {
+            await callback?.onComplete();
+            if (downloadInstall) {
+                await installApk(fileName, md5Hash);
+            }
+            await callback?.onFinish();
+        })
         .catch((errorMessage, statusCode) => {
           callback?.onFailure(errorMessage, statusCode);
         });
-    await callback?.onComplete();
-    if (downloadInstall) {
-        await installApk(fileName, md5Hash);
-    }
-    await callback?.onFinish();
 }
 
 export const openPlayStore = () => {
@@ -150,6 +152,11 @@ export const isCorrectHash = async (path, md5Hash) => {
 export const installApk = async (fileName, md5Hash) => {
 	const apkFilePath = RNUpgrade.downloadApkFilePath + fileName;
     const apkFileExist = await checkApkFileExist(fileName);
-    apkFileExist && (await isCorrectHash(apkFilePath, md5Hash)) && RNUpgrade.installApk(apkFilePath);
+    if (apkFileExist) {
+        const correct = await isCorrectHash(apkFilePath, md5Hash);
+        if (correct) {
+            RNUpgrade.installApk(apkFilePath)
+        }
+    }
 }
 
