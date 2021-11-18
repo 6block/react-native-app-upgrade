@@ -93,6 +93,7 @@ export const openAPPStore = (appid) => {
 export const downloadApk = async ({
     fileName,
     apkUrl,
+    md5Hash,
     callback,
     interval = 250,
     downloadInstall = true
@@ -114,7 +115,7 @@ export const downloadApk = async ({
         });
     await callback?.onComplete();
     if (downloadInstall) {
-        await installApk(fileName);
+        await installApk(fileName, md5Hash);
     }
     await callback?.onFinish();
 }
@@ -141,9 +142,14 @@ export const checkApkFileExist = async (fileName) => {
     return await ReactNativeBlobUtil.fs.exists(path);
 }
 
-export const installApk = async (fileName) => {
+export const isCorrectHash = async (path, md5Hash) => {
+    const hash = await ReactNativeBlobUtil.fs.hash(path, "md5");
+    return hash === md5Hash;
+}
+
+export const installApk = async (fileName, md5Hash) => {
 	const apkFilePath = RNUpgrade.downloadApkFilePath + fileName;
     const apkFileExist = await checkApkFileExist(fileName);
-    apkFileExist && RNUpgrade.installApk(apkFilePath);
+    apkFileExist && (await isCorrectHash(apkFilePath, md5Hash)) && RNUpgrade.installApk(apkFilePath);
 }
 
